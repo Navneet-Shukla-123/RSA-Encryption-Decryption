@@ -40,6 +40,8 @@ func RSA_Encrypt_Decrypt() {
 
 func main() {
 	http.HandleFunc("/encrypt", GetData)
+	http.HandleFunc("/dcrypt", PostData)
+
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Println("Error in starting the server at PORT 8080")
