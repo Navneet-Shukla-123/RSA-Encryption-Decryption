@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"net/http"
 )
 
 func RSA_OAEP_Encrypt(secretMessage string, key rsa.PublicKey) string {
@@ -22,7 +23,7 @@ func CheckError(e error) {
 		log.Println(e)
 	}
 }
-func main() {
+func RSA_Encrypt_Decrypt() {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	CheckError(err)
 
@@ -37,16 +38,25 @@ func main() {
 
 }
 
+func main() {
+	http.HandleFunc("/encrypt", GetData)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Println("Error in starting the server at PORT 8080")
+		return
+	}
+}
+
 func RSA_OAEP_Decrypt(cipherText string, privKey rsa.PrivateKey) string {
 
 	ct, _ := base64.StdEncoding.DecodeString(cipherText)
-	label:=[]byte("OAEP Encrypted")
+	label := []byte("OAEP Encrypted")
 
-	rng:=rand.Reader
-	plainText,err:=rsa.DecryptOAEP(sha256.New(),rng,&privKey,ct,label)
+	rng := rand.Reader
+	plainText, err := rsa.DecryptOAEP(sha256.New(), rng, &privKey, ct, label)
 	CheckError(err)
 
-	fmt.Println("PlainText:",string(plainText))
+	fmt.Println("PlainText:", string(plainText))
 	return string(plainText)
 
 }
