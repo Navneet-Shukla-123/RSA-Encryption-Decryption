@@ -1,6 +1,7 @@
 package main
 
 import (
+	"channels/redis"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
@@ -9,6 +10,10 @@ import (
 	"log"
 	"net/http"
 )
+
+func init() {
+	redis.ConnectToRedis()
+}
 
 func RSA_OAEP_Encrypt(secretMessage string, key rsa.PublicKey) string {
 	label := []byte("OAEP Encrypted")
@@ -41,6 +46,7 @@ func RSA_Encrypt_Decrypt() {
 func main() {
 	http.HandleFunc("/encrypt", GetData)
 	http.HandleFunc("/dcrypt", PostData)
+	http.HandleFunc("/redis", GetFromRedis)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
