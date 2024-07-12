@@ -26,7 +26,9 @@ func RSA_OAEP_Encrypt(secretMessage string, key rsa.PublicKey) string {
 func CheckError(e error) {
 	if e != nil {
 		log.Println(e)
+		return
 	}
+
 }
 func RSA_Encrypt_Decrypt() {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)

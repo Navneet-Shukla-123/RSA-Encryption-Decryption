@@ -53,6 +53,8 @@ func GetData(w http.ResponseWriter, r *http.Request) {
 		Response: resp,
 	}
 
+	r.Header.Add("hash", resp)
+
 	json, err := json.Marshal(jsonResponse)
 	if err != nil {
 		log.Println("error in converting to json ", err)
@@ -85,12 +87,12 @@ func PostData(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(resp)
 	if err != nil {
-		log.Println("Error in converting to json ",err)
+		log.Println("Error in converting to json ", err)
 		w.Write([]byte("error in converting to json"))
 		return
 	}
 
-	log.Println("Message from redis is ",reqData.Message)
+	log.Println("Message from redis is ", reqData.Message)
 	err = redis.InsertIntoRedis(decryptedData, reqData.Message)
 	if err != nil {
 		log.Println("Error in inserting to redis ", err)
